@@ -3,9 +3,11 @@ package v2
 import (
 	"github.com/Pursuit92/openstack/core"
 	glance "github.com/Pursuit92/openstack/image/v2"
+	neutron "github.com/Pursuit92/openstack/network/v2_0"
 )
 
 type Image glance.Image
+type Network neutron.Network
 
 // Fully describes a server
 type Server struct {
@@ -21,7 +23,7 @@ type ServerDetail struct {
 	TenantId       string               `json:"tenant_id,omitempty"`
 	Status         string               `json:"status,omitempty"`
 	Progress       int                  `json:"progress,omitempty"`
-	Image          Image         `json:"image,omitempty"`
+	Image          Image                `json:"image,omitempty"`
 	HostId         string               `json:"host_id,omitempty"`
 	Flavor         Flavor               `json:"flavor,omitempty"`
 	Created        string               `json:"created,omitempty"`
@@ -44,7 +46,7 @@ type ServerCreate struct {
 	AvailabilityZone string            `json:"availability_zone,omitempty"`
 	ImageRef         string            `json:"imageRef,omitempty"`
 	FlavorRef        string            `json:"flavorRef,omitempty"`
-	Networks         []Network         `json:"networks,omitempty"`
+	Networks         []NetConf         `json:"networks,omitempty"`
 	Personality      map[string]string `json:"personality,omitempty"`
 }
 
@@ -53,7 +55,7 @@ type CreateResp struct {
 	AdminPass string `json:"adminPass,omitempty"`
 }
 
-type Network struct {
+type NetConf struct {
 	// necessary if the port isn't specified
 	Uuid string `json:"uuid,omitempty"`
 	// necessary if the uuid isn't specified
@@ -67,7 +69,7 @@ type SecurityGroup struct {
 
 type Flavor struct {
 	core.OsObj
-	Disk int `json:"disk,omitempty"`
-	Ram int `json:"ram,omitempty"`
+	Disk  int `json:"disk,omitempty"`
+	Ram   int `json:"ram,omitempty"`
 	Vcpus int `json:"vcpus,omitempty"`
 }
