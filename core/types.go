@@ -8,7 +8,7 @@ type Link struct {
 }
 
 type OsObj struct {
-	Name string `json:"name,omitempty"`
-	Id string `json:"id,omitempty"`
+	Name  string `json:"name,omitempty"`
+	Id    string `json:"id,omitempty"`
 	Links []Link `json:"links,omitempty"`
 }
