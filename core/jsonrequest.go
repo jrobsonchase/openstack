@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"io"
 	"io/ioutil"
 	"net/http"
 )
@@ -43,18 +42,8 @@ func OsRequest(method, url string, body, out interface{}, token string) (err err
 	}
 	if resp.Status[0] == '2' {
 		if out != nil {
-			var outBuf bytes.Buffer
-			io.Copy(&outBuf, resp.Body)
-			reader := bytes.NewReader(outBuf.Bytes())
-			decoder := json.NewDecoder(reader)
+			decoder := json.NewDecoder(resp.Body)
 			err = decoder.Decode(out)
-			reader.Seek(0, 0)
-			outBytes, _ := ioutil.ReadAll(reader)
-			println(string(outBytes))
-			/*
-				decoder := json.NewDecoder(resp.Body)
-				err = decoder.Decode(out)
-			*/
 		}
 		return
 	}

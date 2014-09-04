@@ -62,7 +62,8 @@ func (cc *ComputeClient) ServersDetail() ([]*Server, error) {
 	return resp["servers"], err
 }
 
-func (cc *ComputeClient) Details(serverId string) (*Server, error) {
+func (cc *ComputeClient) Details(srv *Server) (*Server, error) {
+	serverId := srv.Id
 	resp := make(map[string]*Server)
 
 	err := cc.AuthedReq("GET", cc.Endpoint.PublicUrl+"/servers/"+serverId, nil, &resp)
@@ -102,4 +103,86 @@ func (cc *ComputeClient) Create(srv *Server) (*Server, error) {
 		return nil, err
 	}
 	return resp["server"], nil
+}
+
+func (cc *ComputeClient) Images() ([]*Image,error) {
+	resp := make(map[string][]*Image)
+	err := cc.AuthedReq("GET",cc.Endpoint.PublicUrl+"/images",nil,&resp)
+	if err != nil {
+		return nil,err
+	}
+	return resp["images"],nil
+}
+
+func (cc *ComputeClient) ImagesDetail() ([]*Image,error) {
+	resp := make(map[string][]*Image)
+	err := cc.AuthedReq("GET",cc.Endpoint.PublicUrl+"/images/detail",nil,&resp)
+	if err != nil {
+		return nil,err
+	}
+	return resp["images"],nil
+}
+
+func (cc *ComputeClient) ImageDetails(img *Image) (*Image,error) {
+	resp := make(map[string]*Image)
+	err := cc.AuthedReq("GET",cc.Endpoint.PublicUrl+"/images/" + img.Id,nil,&resp)
+	if err != nil {
+		return nil,err
+	}
+	return resp["image"],nil
+}
+
+func (cc *ComputeClient) DeleteImage(img *Image) error {
+	err := cc.AuthedReq("DELETE",cc.Endpoint.PublicUrl+"/images/" + img.Id,nil,nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (cc *ComputeClient) GetImageMeta(img *Image) (map[string]string,error) {
+	resp := make(map[string]map[string]string)
+	err := cc.AuthedReq("GET", cc.Endpoint.PublicUrl + "/images/" + img.Id + "/metadata",nil,&resp)
+	if err != nil {
+		return nil,err
+	}
+	return resp["metadata"],nil
+}
+
+func (cc *ComputeClient) SetImageMeta(img *Image,meta map[string]string) (map[string]string,error) {
+	resp := make(map[string]map[string]string)
+	req := make(map[string]map[string]string)
+	req["metadata"] = meta
+	err := cc.AuthedReq("GET", cc.Endpoint.PublicUrl + "/images/" + img.Id + "/metadata",req,&resp)
+	if err != nil {
+		return nil,err
+	}
+	return resp["metadata"],nil
+}
+
+func (cc *ComputeClient) Flavors() ([]*Flavor,error) {
+	resp := make(map[string][]*Flavor)
+	err := cc.AuthedReq("GET",cc.Endpoint.PublicUrl + "/flavors",nil,&resp)
+	if err != nil {
+		return nil,err
+	}
+	return resp["flavors"],nil
+}
+
+func (cc *ComputeClient) FlavorsDetail() ([]*Flavor,error) {
+	resp := make(map[string][]*Flavor)
+	err := cc.AuthedReq("GET",cc.Endpoint.PublicUrl + "/flavors/detail",nil,&resp)
+	if err != nil {
+		return nil,err
+	}
+	return resp["flavors"],nil
+}
+
+func (cc *ComputeClient) FlavorDetails(flav *Flavor) (*Flavor,error) {
+	resp := make(map[string]*Flavor)
+	err := cc.AuthedReq("GET",cc.Endpoint.PublicUrl + "/flavors/" + flav.Id,nil,&resp)
+	if err != nil {
+		return nil,err
+	}
+	return resp["flavor"],nil
 }

@@ -5,11 +5,11 @@ import (
 	glance "github.com/Pursuit92/openstack/image/v2"
 )
 
+type Image glance.Image
+
 // Fully describes a server
 type Server struct {
-	Id    string      `json:"id,omitempty"`
-	Name  string      `json:"name,omitempty"`
-	Links []core.Link `json:"links,omitempty"`
+	core.OsObj
 	*ServerDetail
 	*ServerCreate
 	*CreateResp
@@ -21,7 +21,7 @@ type ServerDetail struct {
 	TenantId       string               `json:"tenant_id,omitempty"`
 	Status         string               `json:"status,omitempty"`
 	Progress       int                  `json:"progress,omitempty"`
-	Image          glance.Image         `json:"image,omitempty"`
+	Image          Image         `json:"image,omitempty"`
 	HostId         string               `json:"host_id,omitempty"`
 	Flavor         Flavor               `json:"flavor,omitempty"`
 	Created        string               `json:"created,omitempty"`
@@ -31,11 +31,6 @@ type ServerDetail struct {
 	AccessIPv6     string               `json:"accessIPv6,omitempty"`
 	SecurityGroups []SecurityGroup      `json:"security_groups,omitempty"`
 	ConfigDrive    string               `json:"config_drive,omitempty"`
-}
-
-type Flavor struct {
-	Id    string      `json:"id,omitempty"`
-	Links []core.Link `json:"links,omitempty"`
 }
 
 type Address struct {
@@ -68,4 +63,11 @@ type Network struct {
 
 type SecurityGroup struct {
 	Name string `json:"name,omitempty"`
+}
+
+type Flavor struct {
+	core.OsObj
+	Disk int `json:"disk,omitempty"`
+	Ram int `json:"ram,omitempty"`
+	Vcpus int `json:"vcpus,omitempty"`
 }
