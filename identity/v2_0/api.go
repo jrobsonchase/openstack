@@ -2,41 +2,41 @@ package v2_0
 
 import (
 	//"net/http"
-	"net/url"
 	"errors"
+	"net/url"
 	//"regexp"
 	"github.com/Pursuit92/openstack/core"
 )
 
 var (
-	ErrNoCreds error = errors.New("No credentials specified.")
-	ErrNoTenant = errors.New("No tenant specified.")
-	ErrNotAuthed = errors.New("Not authenticated.")
+	ErrNoCreds   error = errors.New("No credentials specified.")
+	ErrNoTenant        = errors.New("No tenant specified.")
+	ErrNotAuthed       = errors.New("Not authenticated.")
 )
 
 type IdentityClient struct {
 	// The token for authentication. Id is the only required field for
 	// authentication purposes.
-	token *Token
+	token               *Token
 	passwordCredentials *PasswordCredentials
-	tenantName string
-	tenantId string
-	AuthUrl string
-	Access *Access
+	tenantName          string
+	tenantId            string
+	AuthUrl             string
+	Access              *Access
 }
 
 // Creates a new Identity client. Will return any errors from parsing
 // the url, but performs no network operations
-func NewClient(authUrl string) (*IdentityClient,error) {
-	url,err := url.Parse(authUrl)
+func NewClient(authUrl string) (*IdentityClient, error) {
+	url, err := url.Parse(authUrl)
 	if err != nil {
-		return nil,err
+		return nil, err
 	}
 
 	var client IdentityClient
 	client.AuthUrl = url.String()
 
-	return &client,nil
+	return &client, nil
 }
 
 // Authenticates the Identity client and stores the results of the attempt
@@ -67,7 +67,7 @@ func (ic *IdentityClient) Authenticate() error {
 	}
 
 	resp := &tokensResponse{}
-	err := core.OsRequest("POST",ic.AuthUrl + "/tokens",tokensRequest{&authInfo},resp,"")
+	err := core.OsRequest("POST", ic.AuthUrl+"/tokens", tokensRequest{&authInfo}, resp, "")
 	if err != nil {
 		return err
 	}
@@ -76,8 +76,8 @@ func (ic *IdentityClient) Authenticate() error {
 	return nil
 }
 
-func (ic *IdentityClient) PasswordAuth(user,pass string) {
-	ic.passwordCredentials = &PasswordCredentials{user,pass}
+func (ic *IdentityClient) PasswordAuth(user, pass string) {
+	ic.passwordCredentials = &PasswordCredentials{user, pass}
 }
 
 func (ic *IdentityClient) TokenAuth(tokenStr string) {
@@ -97,6 +97,5 @@ func (ic *IdentityClient) AuthedReq(method, url string, data, resp interface{}) 
 		return ErrNotAuthed
 	}
 
-	return core.OsRequest(method,url,data,resp,ic.Access.Token.Id)
+	return core.OsRequest(method, url, data, resp, ic.Access.Token.Id)
 }
-

@@ -1,9 +1,8 @@
 package core
 
-import (
-)
+import ()
 
 type Link struct {
 	Href string `json:"href,omitempty"`
-	Rel string `json:"rel,omitempty"`
+	Rel  string `json:"rel,omitempty"`
 }

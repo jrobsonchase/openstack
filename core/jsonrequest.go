@@ -1,12 +1,12 @@
 package core
 
 import (
-	"io"
+	"bytes"
+	"encoding/json"
 	"errors"
+	"io"
 	"io/ioutil"
 	"net/http"
-	"encoding/json"
-	"bytes"
 )
 
 var httpClient *http.Client
@@ -15,7 +15,7 @@ func init() {
 	httpClient = &http.Client{}
 }
 
-func OsRequest(method,url string, body, out interface{},token string) (err error) {
+func OsRequest(method, url string, body, out interface{}, token string) (err error) {
 	var req *http.Request
 	if body != nil {
 		bodyReader := &bytes.Buffer{}
@@ -23,19 +23,19 @@ func OsRequest(method,url string, body, out interface{},token string) (err error
 		if err != nil {
 			return
 		}
-		req, err = http.NewRequest(method,url,bodyReader)
+		req, err = http.NewRequest(method, url, bodyReader)
 		if err != nil {
 			return
 		}
 	} else {
-		req, err = http.NewRequest(method,url,nil)
+		req, err = http.NewRequest(method, url, nil)
 		if err != nil {
 			return
 		}
 	}
-	req.Header.Add("Content-Type","application/json")
+	req.Header.Add("Content-Type", "application/json")
 	if token != "" {
-		req.Header.Add("X-Auth-Token",token)
+		req.Header.Add("X-Auth-Token", token)
 	}
 	resp, err := httpClient.Do(req)
 	if err != nil {
@@ -44,21 +44,21 @@ func OsRequest(method,url string, body, out interface{},token string) (err error
 	if resp.Status[0] == '2' {
 		if out != nil {
 			var outBuf bytes.Buffer
-			io.Copy(&outBuf,resp.Body)
+			io.Copy(&outBuf, resp.Body)
 			reader := bytes.NewReader(outBuf.Bytes())
 			decoder := json.NewDecoder(reader)
 			err = decoder.Decode(out)
-			reader.Seek(0,0)
-			outBytes,_ := ioutil.ReadAll(reader)
+			reader.Seek(0, 0)
+			outBytes, _ := ioutil.ReadAll(reader)
 			println(string(outBytes))
 			/*
-			decoder := json.NewDecoder(resp.Body)
-			err = decoder.Decode(out)
+				decoder := json.NewDecoder(resp.Body)
+				err = decoder.Decode(out)
 			*/
 		}
 		return
 	}
-	bodyBytes,err := ioutil.ReadAll(resp.Body)
+	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return
 	}

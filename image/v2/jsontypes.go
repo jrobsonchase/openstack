@@ -5,6 +5,6 @@ import (
 )
 
 type Image struct {
-	Id string `json:"id,omitempty"`
+	Id    string      `json:"id,omitempty"`
 	Links []core.Link `json:"links,omitempty"`
 }
