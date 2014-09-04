@@ -1,49 +1,50 @@
-package api
+package v2_0
 
-type passwordCredentials struct {
+type PasswordCredentials struct {
 	Username string `json:"username,omitempty"`
 	Password string `json:"password,omitempty"`
 }
 
-type token struct {
+type Token struct {
 	Id string `json:"id,omitempty"`
 	IssuedAt string `json:"issued_at,omitempty"`
 	Expires string `json:"expires,omitempty"`
-	Tenant *tenant `json:"tenant,omitempty"`
+	Tenant *Tenant `json:"tenant,omitempty"`
 }
 
-type tenant struct {
+type Tenant struct {
 	Description string `json:"description,omitempty"`
 	Enabled bool `json:"enabled,omitempty"`
 	Id string `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }
 
-type auth struct {
+type Auth struct {
 	TenantName string `json:"tenantName,omitempty"`
 	TenantId string `json:"tenantId,omitempty"`
-	PasswordCredentials *passwordCredentials `json:"passwordCredentials,omitempty"`
-	Token *token `json:"token,omitempty"`
+	PasswordCredentials *PasswordCredentials `json:"passwordCredentials,omitempty"`
+	Token *Token `json:"token,omitempty"`
 }
 
 type tokensRequest struct {
-	TenantName string `json:"tenantName,omitempty"`
-	TenantId string `json:"tenantId,omitempty"`
-	Auth *auth `json:"auth,omitempty"`
+	Auth *Auth `json:"auth,omitempty"`
 }
 
-type access struct {
-	Token *token `json:"token,omitempty"`
+type Access struct {
+	Token *Token `json:"token,omitempty"`
+	ServiceCatalog []CatalogEntry `json:"serviceCatalog,omitempty"`
+	User *User `json:"user,omitempty"`
+	Metadata *metadata `json:"metadata,omitempty"`
 }
 
-type catalogEntry struct {
-	Endpoints []endpoint `json:"endpoints,omitempty"`
+type CatalogEntry struct {
+	Endpoints []Endpoint `json:"endpoints,omitempty"`
 	EndpointsLinks []string `json:"endpoints_links,omitempty"`
 	Type string `json:"type,omitempty"`
 	Name string `json:"name,omitempty"`
 }
 
-type endpoint struct {
+type Endpoint struct {
 	AdminURL string `json:"adminURL,omitempty"`
 	Region string `json:"region,omitempty"`
 	InternalURL string `json:"internalURL,omitempty"`
@@ -51,15 +52,15 @@ type endpoint struct {
 	PublicUrl string `json:"publicURL,omitempty"`
 }
 
-type user struct {
+type User struct {
 	Username string `json:"username,omitempty"`
 	RolesLinks []string `json:"roles_links,omitempty"`
 	Id string `json:"id,omitempty"`
-	Roles []role `json:"roles,omitempty"`
+	Roles []Role `json:"roles,omitempty"`
 	Name string `json:"name,omitempty"`
 }
 
-type role struct {
+type Role struct {
 	Name string `json:"name,omitempty"`
 }
 
@@ -69,8 +70,5 @@ type metadata struct {
 }
 
 type tokensResponse struct {
-	Access *access `json:"access,omitempty"`
-	ServiceCatalog []catalogEntry `json:"serviceCatalog,omitempty"`
-	User *user `json:"user,omitempty"`
-	Metadata *metadata `json:"metadata,omitempty"`
+	Access *Access `json:"access,omitempty"`
 }
