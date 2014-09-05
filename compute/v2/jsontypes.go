@@ -26,6 +26,7 @@ type ServerDetail struct {
 	Image          Image                `json:"image,omitempty"`
 	HostId         string               `json:"host_id,omitempty"`
 	Flavor         Flavor               `json:"flavor,omitempty"`
+	KeyName        string               `json:"key_name,omitempty"`
 	Created        string               `json:"created,omitempty"`
 	Addresses      map[string][]Address `json:"addresses,omitempty"`
 	Metadata       map[string]string    `json:"metadata,omitempty"`
@@ -48,6 +49,7 @@ type ServerCreate struct {
 	FlavorRef        string            `json:"flavorRef,omitempty"`
 	Networks         []NetConf         `json:"networks,omitempty"`
 	Personality      map[string]string `json:"personality,omitempty"`
+	NetNames		 []string		   `json:"-"`
 }
 
 // fields unique to the server creation response

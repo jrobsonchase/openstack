@@ -91,7 +91,7 @@ func NewServer() *Server {
 	return &Server{ServerDetail: &ServerDetail{}, ServerCreate: &ServerCreate{}}
 }
 
-func (cc *ComputeClient) Create(srv *Server) (*Server, error) {
+func (cc *ComputeClient) create(srv *Server) (*Server, error) {
 	req := make(map[string]*Server)
 	resp := make(map[string]*Server)
 	if srv.TenantId == "" {
